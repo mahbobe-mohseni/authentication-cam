@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import StepperComponent from './components/StepperComponent';
+import StepOne from './components/StepOne';
+import StepTwo from './components/StepTwo';
+import StepThree from './components/StepThree';
 
 function App() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [video, setVideo] = useState(null);
+
+  const nextStep = () => setCurrentStep(currentStep + 1);
+  const prevStep = () => setCurrentStep(currentStep - 1);
+  const handleVideoUpload = (recordedVideo) => {
+    setVideo(recordedVideo);
+    nextStep();
+  };
+
+  const steps = [
+    <StepOne nextStep={nextStep} />,
+    <StepTwo nextStep={nextStep} prevStep={prevStep} handleVideoUpload={handleVideoUpload} />,
+    <StepThree video={video} prevStep={prevStep} />
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <StepperComponent activeStep={currentStep} />
+      {steps[currentStep - 1]}
     </div>
   );
 }
